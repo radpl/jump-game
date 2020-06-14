@@ -8,12 +8,11 @@
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable import/newline-after-import */
 /* eslint-disable no-console */
-import * as PIXI from 'pixi.js';
-import './style.css';
+import { Application as PIXIApplication } from 'pixi.js';
 import { setupKeyboardEvents, hitTest, detectBoundaries } from './utils';
 import { drawCircle, drawLine, drawRect } from './shapes';
 
-const app = new PIXI.Application({ width: 1024, height: 512 });
+const app = new PIXIApplication({ width: 1024, height: 512 });
 document.body.appendChild(app.view);
 
 const line = drawLine(app.renderer.view.width);

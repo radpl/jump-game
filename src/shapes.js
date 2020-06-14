@@ -3,10 +3,10 @@
 /* eslint-disable func-names */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-undef */
-import * as PIXI from 'pixi.js';
+import { Graphics as PIXIGraphics } from 'pixi.js';
 
 export const drawCircle = () => {
-  const newCircle = new PIXI.Graphics();
+  const newCircle = new PIXIGraphics();
   newCircle.beginFill(0xAAAAAA);
   newCircle.lineStyle(1, 26112, 1);
   newCircle.drawCircle(0, 0, 15);
@@ -78,7 +78,7 @@ export const drawCircle = () => {
 };
 
 export const drawLine = (width) => {
-  const newLine = new PIXI.Graphics();
+  const newLine = new PIXIGraphics();
   newLine.lineStyle(1, 0xFFFFFF, 1);
   newLine.moveTo(0, 450);
   newLine.lineTo(width, 450);
@@ -87,7 +87,7 @@ export const drawLine = (width) => {
 };
 
 export const drawRect = (orgX) => {
-  const newRect = new PIXI.Graphics();
+  const newRect = new PIXIGraphics();
   newRect.redraw = function () {
     this.lineStyle(1, 0xFFFFFF, 1);
     this.drawRect(0, 0, 26, 46);
