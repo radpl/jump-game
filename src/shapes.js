@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable spaced-comment */
 /* eslint-disable func-names */
-/* eslint-disable import/prefer-default-export */
 /* eslint-disable no-undef */
 import { Graphics as PIXIGraphics } from 'pixi.js';
 
 export const drawCircle = () => {
   const newCircle = new PIXIGraphics();
+
   newCircle.beginFill(0xAAAAAA);
   newCircle.lineStyle(1, 26112, 1);
   newCircle.drawCircle(0, 0, 15);
@@ -22,24 +22,17 @@ export const drawCircle = () => {
   newCircle.frictionY = 1;
 
   newCircle.speed = 0.2;
-
   newCircle.drag = 0.98;
 
-  newCircle.applyAcceleration = function () {
+  newCircle.handleMovement = function () {
     this.vx += this.accelerationX;
     this.vy += this.accelerationY * 3;
-  };
-  newCircle.applyFriction = function () {
     this.vx *= this.frictionX;
     this.vy *= this.frictionY;
-  };
-  newCircle.applyGravity = function () {
     this.vy += 0.1;
-  };
-  newCircle.applyVelocity = function () {
     this.x += this.vx;
     this.y += this.vy;
-  };
+  }
 
   newCircle.hitDetected = function (check) {
     this.clear();
@@ -74,6 +67,48 @@ export const drawCircle = () => {
     }
   };
 
+  newCircle.keyUp = function (direction) {
+    switch (direction) {
+      case 'left':
+        this.accelerationX = 0;
+        this.frictionX = this.drag;
+        break;
+      case 'right':
+        this.accelerationX = 0;
+        this.frictionX = this.drag;
+        break;
+      case 'up':
+        this.accelerationY = 0;
+        this.frictionY = this.drag;
+        break;
+      case 'down':
+        this.accelerationY = 0;
+        this.frictionY = this.drag;
+        break;
+    }
+  }
+
+  newCircle.keyDown = function (direction) {
+    switch (direction) {
+      case 'left':
+        this.accelerationX = -this.speed;
+        this.frictionX = 1;
+        break;
+      case 'right':
+        this.accelerationX = this.speed;
+        this.frictionX = 1;
+        break;
+      case 'up':
+        this.accelerationY = -this.speed;
+        this.frictionY = 1;
+        break;
+      case 'down':
+        this.accelerationY = this.speed;
+        this.frictionY = 1;
+        break;
+    }
+  }
+
   return newCircle;
 };
 
@@ -88,6 +123,7 @@ export const drawLine = (width) => {
 
 export const drawRect = (orgX) => {
   const newRect = new PIXIGraphics();
+
   newRect.redraw = function () {
     this.lineStyle(1, 0xFFFFFF, 1);
     this.drawRect(0, 0, 26, 46);
@@ -97,5 +133,16 @@ export const drawRect = (orgX) => {
   };
 
   newRect.shouldRedraw = function () { return this.x + this.width < 0; };
+
+  newRect.handleRedraw = function () {
+    if (this.shouldRedraw()) {
+      this.clear();
+      this.x = this.orgX;
+    } else {
+      this.clear();
+      this.redraw();
+      this.x -= 1;
+    }
+  }
   return newRect;
 };

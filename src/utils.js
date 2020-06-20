@@ -1,92 +1,52 @@
-/* eslint-disable max-len */
-/* eslint-disable no-param-reassign */
-/* eslint-disable func-names */
-/* eslint-disable spaced-comment */
-/* eslint-disable import/prefer-default-export */
+export function setupKeyboardEvents(subscriber) {
 
-function Keyboard(keyCode, jump = false) {
-  this.code = keyCode;
-  this.jump = jump;
-  this.isDown = false;
-  this.isUp = true;
-  this.press = undefined;
-  this.release = undefined;
-
-  this.downHandler = (event) => {
-    if (this.jump && event.keyCode === this.code) {
-      this.press();
-      setTimeout(() => { this.release(); }, 100);
-    } else if (event.keyCode === this.code) {
-      if (this.isUp && this.press) this.press();
-      this.isDown = true;
-      this.isUp = false;
+  function keyDownHandler(event) {
+    switch (event.keyCode) {
+      case 37:
+        subscriber.keyDown('left');
+        break;
+      case 38:
+        subscriber.keyDown('up');
+        break;
+      case 39:
+        subscriber.keyDown('right')
+        break;
+      case 40:
+        subscriber.keyDown('down');
+        break;
     }
     event.preventDefault();
   };
 
-  this.upHandler = (event) => {
-    if (event.keyCode === this.code) {
-      if (this.isDown && this.release) this.release();
-      this.isDown = false;
-      this.isUp = true;
+  function keyUpHandler(event) {
+    switch (event.keyCode) {
+      case 37:
+        subscriber.keyUp('left');
+        break;
+      case 38:
+        subscriber.keyUp('up');
+        break;
+      case 39:
+        subscriber.keyUp('right')
+        break;
+      case 40:
+        subscriber.keyUp('down');
+        break;
     }
     event.preventDefault();
   };
 
-  window.addEventListener('keydown', this.downHandler, false);
-  window.addEventListener('keyup', this.upHandler, false);
-}
+  function touchHandler() {
+    this.keyDown('up');
+    setTimeout(() => {
+      this.keyUp('up');
+    }, 100)
+  }
 
-export function setupKeyboardEvents(obj) {
-  const left = new Keyboard(37, false);
-  const up = new Keyboard(38, true);
-  const right = new Keyboard(39, false);
-  const down = new Keyboard(40, false);
+  window.addEventListener('keydown', keyDownHandler, false);
+  window.addEventListener('keyup', keyUpHandler, false);
+  window.addEventListener('touchstart', touchHandler.bind(subscriber), false);
 
-  left.press = function () {
-    obj.accelerationX = -obj.speed;
-    obj.frictionX = 1;
-  };
-
-  left.release = function () {
-    if (!right.isDown) {
-      obj.accelerationX = 0;
-      obj.frictionX = obj.drag;
-    }
-  };
-
-  up.press = function () {
-    obj.accelerationY = -obj.speed;
-    obj.frictionY = 1;
-  };
-  up.release = function () {
-    if (!down.isDown) {
-      obj.accelerationY = 0;
-      obj.frictionY = obj.drag;
-    }
-  };
-
-  right.press = function () {
-    obj.accelerationX = obj.speed;
-    obj.frictionX = 1;
-  };
-  right.release = function () {
-    if (!left.isDown) {
-      obj.accelerationX = 0;
-      obj.frictionX = obj.drag;
-    }
-  };
-
-  down.press = function () {
-    obj.accelerationY = obj.speed;
-    obj.frictionY = 1;
-  };
-  down.release = function () {
-    if (!up.isDown) {
-      obj.accelerationY = 0;
-      obj.frictionY = obj.drag;
-    }
-  };
 }
 
 export function detectBoundaries(object, container) {
@@ -114,19 +74,20 @@ export function detectBoundaries(object, container) {
 }
 
 export function hitTest(r1, r2) {
-  r1.centerX = r1.x + r1.width / 2;
-  r1.centerY = r1.y + r1.height / 2;
+
   r2.centerX = r2.x + r2.width / 2;
   r2.centerY = r2.y + r2.height / 2;
 
-  r1.halfWidth = r1.width / 2;
-  r1.halfHeight = r1.height / 2;
-  r2.halfWidth = r2.width / 2;
-  r2.halfHeight = r2.height / 2;
+  r1.distX = Math.abs(r1.x - r2.centerX);
+  r1.distY = Math.abs(r1.y - r2.centerY);
 
-  if (Math.abs(r1.centerX - r2.centerX) < r1.halfWidth + r2.halfWidth && Math.abs(r1.centerY - r2.centerY) < r1.halfHeight + r2.halfHeight) {
-    return true;
-  }
+  if (r1.distX > (r2.width / 2 + 15)) { return false; }
+  if (r1.distY > (r2.height / 2 + 15)) { return false; }
 
-  return false;
+  if (r1.distX <= (r2.width / 2)) { return true; }
+  if (r1.distY <= (r2.height / 2)) { return true; }
+
+  const cornerDistance_sq = (r1.distX - r2.width / 2) ** 2 + (r1.distY - r2.height / 2) ** 2;
+  if (cornerDistance_sq <= 15 ** 2) return true;
+
 }

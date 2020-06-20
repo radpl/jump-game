@@ -1,13 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable max-len */
-/* eslint-disable vars-on-top */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-var */
-/* eslint-disable func-names */
-/* eslint-disable spaced-comment */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable import/newline-after-import */
-/* eslint-disable no-console */
 import { Application as PIXIApplication } from 'pixi.js';
 import { setupKeyboardEvents, hitTest, detectBoundaries } from './utils';
 import { drawCircle, drawLine, drawRect } from './shapes';
@@ -31,21 +21,11 @@ app.stage.addChild(circle);
 
 // Listen for frame updates
 app.ticker.add(() => {
-  rects.forEach((rectangle) => {
-    if (rectangle.shouldRedraw()) {
-      rectangle.clear();
-      rectangle.x = rectangle.orgX;
-    } else {
-      rectangle.clear();
-      rectangle.redraw();
-      rectangle.x -= 1;
-    }
-  });
 
-  circle.applyAcceleration();
-  circle.applyFriction();
-  circle.applyGravity();
-  circle.applyVelocity();
+  rects.forEach((rectangle) => { rectangle.handleRedraw() });
+
+  circle.handleMovement();
+
   const col = rects.some((rectangle) => hitTest(circle, rectangle));
 
   circle.hitDetected(col);
@@ -55,6 +35,7 @@ app.ticker.add(() => {
       x: 0, y: 0, width: app.renderer.view.width, height: app.renderer.view.height - 50,
     });
   circle.boundariesDetected(boundaries);
+
 });
 
 setupKeyboardEvents(circle);
