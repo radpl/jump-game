@@ -73,6 +73,28 @@ export function detectBoundaries(object, container) {
   return collision;
 }
 
+export function detectOutside(r1, r2) {
+  const collision = {};
+
+  r2.centerX = r2.x + r2.width / 2;
+  r2.centerY = r2.y + r2.height / 2;
+
+  r1.distX = r1.x - r2.centerX;
+  r1.distY = r1.y - r2.centerY;
+
+  if (Math.abs(r1.distX) <= (r2.width / 2) && Math.abs(r1.distY) <= (r2.height / 2) + r1.radius) {
+    if (r1.distY <= 0) collision.top = r2.y - r1.radius;
+    if (r1.distY > 0) { collision.bottom = r2.y + r2.height + r1.radius; }
+  }
+  if (Math.abs(r1.distX) <= (r2.width / 2) + r1.radius && Math.abs(r1.distY) <= (r2.height / 2)) {
+    if (r1.distX > 0) collision.right = r2.x + r2.width + r1.radius;
+    if (r1.distX < 0) collision.left = r2.x - r1.radius;
+  }
+  if (Object.keys(collision).length === 0) return undefined;
+
+  return collision;
+}
+
 export function hitTest(r1, r2) {
 
   r2.centerX = r2.x + r2.width / 2;
@@ -90,4 +112,8 @@ export function hitTest(r1, r2) {
   const cornerDistance_sq = (r1.distX - r2.width / 2) ** 2 + (r1.distY - r2.height / 2) ** 2;
   if (cornerDistance_sq <= 15 ** 2) return true;
 
+}
+
+export function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }

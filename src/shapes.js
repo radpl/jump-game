@@ -4,7 +4,7 @@
 /* eslint-disable no-undef */
 import { Graphics as PIXIGraphics } from 'pixi.js';
 
-export const drawCircle = () => {
+export const drawCircle = (positionY) => {
   const newCircle = new PIXIGraphics();
 
   newCircle.beginFill(0xAAAAAA);
@@ -12,9 +12,10 @@ export const drawCircle = () => {
   newCircle.drawCircle(0, 0, 15);
   newCircle.endFill();
   newCircle.x = 100;
-  newCircle.y = 435;
+  //newCircle.y = positionY;
   newCircle.vx = 0;
   newCircle.vy = 0;
+  newCircle.radius = 15;
 
   newCircle.accelerationX = 0;
   newCircle.accelerationY = 0;
@@ -48,7 +49,7 @@ export const drawCircle = () => {
 
   newCircle.boundariesDetected = function (boundaries) {
     if (boundaries) {
-      if (boundaries.left === 0) {
+      if (boundaries.left) {
         this.vx = -this.vx / 2;
         this.x = boundaries.left;
       }
@@ -56,7 +57,7 @@ export const drawCircle = () => {
         this.vx = -this.vx / 2;
         this.x = boundaries.right;
       }
-      if (boundaries.top === 0) {
+      if (boundaries.top) {
         this.vy = -this.vy / 2;
         this.y = boundaries.top;
       }
@@ -112,23 +113,23 @@ export const drawCircle = () => {
   return newCircle;
 };
 
-export const drawLine = (width) => {
+export const drawLine = (width, positionY) => {
   const newLine = new PIXIGraphics();
   newLine.lineStyle(1, 0xFFFFFF, 1);
-  newLine.moveTo(0, 450);
-  newLine.lineTo(width, 450);
+  newLine.moveTo(0, positionY);
+  newLine.lineTo(width, positionY);
 
   return newLine;
 };
 
-export const drawRect = (orgX) => {
+export const drawRect = (orgX, positionY) => {
   const newRect = new PIXIGraphics();
 
   newRect.redraw = function () {
     this.lineStyle(1, 0xFFFFFF, 1);
-    this.drawRect(0, 0, 26, 46);
+    this.drawRect(0, 0, 56, 46);
     this.alpha = 0.5;
-    this.y = 404;
+    this.y = positionY - 46;
     this.orgX = orgX;
   };
 
