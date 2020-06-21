@@ -7,7 +7,10 @@ module.exports = {
   entry: './src/index.js',
   plugins: [
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ title: 'Simple Game' })],
+    new HtmlWebpackPlugin({
+      title: 'Simple Game',
+      template: './src/index.html',
+    })],
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
@@ -15,6 +18,7 @@ module.exports = {
   module: {
     rules: [
       { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      { test: /\.mp3$/, use: 'file-loader' },
       { test: /\.(png|svg|jpg|gif)$/, use: ['file-loader'] },
       { test: /\.js$/, exclude: /node_modules/, use: ['babel-loader', 'eslint-loader'] },
     ],

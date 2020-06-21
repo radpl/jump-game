@@ -52,7 +52,7 @@ export const drawCircle = (positionY, arcAngle) => {
     } else {
       this.beginFill(0xAAAAAA);
     }
-    console.log(this.arcAngle);
+    //console.log(this.arcAngle);
     this.lineStyle(1, 26112, 1);
     if (this.myDirection) {
       this.arc(0, 0, 15, Math.PI + this.arcAngle, Math.PI + 2 * Math.PI - this.arcAngle, false);
